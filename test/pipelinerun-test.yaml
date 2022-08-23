@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: pipelinerun
+spec:
+  serviceAccountName: tekton-build-sa
+  pipelineRef:
+    name: pipeline
+  workspaces:
+    - name: demo-repo-pvc
+      persistentVolumeClaim:
+        claimName: demo-repo-pvc
+  params:
+    - name: git_url
+      value: https://github.com/wl4g/springboot-istio-charts-template.git
+    - name: image
+      value: "docker.io/wl4g/springboot-demo:1.0.1"
+    - name: charts_dir
+      value: "./helm"
+    - name: release_name
+      value: demo
+    - name: release_namespace
+      value: "kube-ops"
+    - name: overwrite_values
+      value: "image.repository=docker.io/wl4g/springboot-demo,image.tag=1.0.1"
+    - name: values_file
+      value: "my-values.yaml"
