@@ -2,15 +2,18 @@
 
 General tekton pipeline template and examples
 
-## Quick Start
+## Quick start examples
 
 - ***Notice:*** This project demonstrates the CI/CD process and needs to depend on the project: [springboot-istio-charts-template](https://github.com/wl4g/springboot-istio-charts-template), please make sure it has been downloaded locally.
 
 - Run pipeline testing
 
 ```bash
-$ kubectl apply -f pipelinerun.yaml
-$ tkn pr describe pipelinerun
+kubectl apply -f ./templates/cd
+kubectl apply -f ./templates/ci
+kubectl apply -f ./test/pipelinerun-test.yaml
+tkn pr describe pipelinerun
+
 Name:              pipelinerun
 Namespace:         default
 Pipeline Ref:      pipeline
@@ -55,22 +58,22 @@ STARTED         DURATION   STATUS
  ∙ rollback
 
 # 部署成功了
-$ curl springboot-demo.svc.cluster.local/demo/echo?name=jack01
+curl springboot-demo.svc.cluster.local/demo/echo?name=jack01
 {"timestamp":1661096722664,"appversion":"1.0.0","method":"POST","path":"/demo/echo","headers":{},"body":"name=jack01"}
 ```
 
 - Configure Event trigger testing
 
 ```bash
-$ kubectl get eventlistener gitlab-listener
+kubectl get eventlistener gitlab-listener
 NAME              ADDRESS                                                    AVAILABLE   REASON                     READY   REASON
 gitlab-listener   http://el-gitlab-listener.default.svc.cluster.local:8080   True        MinimumReplicasAvailable   True
 ```
 
 ```bash
-$ kubectl get pipelinerun
+kubectl get pipelinerun
 NAME               SUCCEEDED   REASON      STARTTIME   COMPLETIONTIME
 gitlab-run-j77rx   True        Completed   4m46s       46s
-$ curl springboot-demo.svc.cluster.local/demo/echo?name=jack01
+curl springboot-demo.svc.cluster.local/demo/echo?name=jack01
 {"timestamp":1661096722664,"appversion":"1.0.0","method":"POST","path":"/demo/echo","headers":{},"body":"name=jack01"}
 ```

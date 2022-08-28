@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build
+spec:
+  workspaces:
+    - name: maven-repo
+      mountPath: /workspace/repo
+  steps:
+    - name: build
+      image: maven:3.8.6-eclipse-temurin-8-alpine
+      workingDir: /workspace/repo
+      script: |
+        mvn clean install -DskipTests -T 2C 
+      env:
+        - name: GOPROXY
+          value: https://goproxy.cn
+        - name: GOOS
+          value: linux
+        - name: GOARCH
+          value: amd64
